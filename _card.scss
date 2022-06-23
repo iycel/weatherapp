@@ -1,0 +1,53 @@
+.ajax-section {
+  margin: 70px 0 20px;
+  .cities {
+    display: grid;
+    grid-gap: 32px 20px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .city {
+    position: relative;
+    padding: 40px 10%;
+    border-radius: 20px;
+    background: #fff;
+    color: #53627c;
+    &::after {
+      content: "";
+      width: 90%;
+      height: 50px;
+      position: absolute;
+      bottom: -12px;
+      left: 5%;
+      z-index: -1;
+      opacity: 0.3;
+      border-radius: 20px;
+      background: #fff;
+      sup {
+        font-size: 0.5em;
+      }
+    }
+  }
+  figcaption {
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .city-temp {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #1e2432;
+  }
+  .city-name sup {
+    padding: 0.2em 0.6em;
+    border-radius: 30px;
+    color: #fff;
+    background: #ff8c00;
+    font-size: 15px;
+  }
+  .city-icon {
+    margin-top: 10px;
+    width: 100px;
+    height: 100px;
+  }
+}

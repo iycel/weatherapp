@@ -1,0 +1,76 @@
+@use "toastify";
+@use "card";
+@use "media";
+
+$backgroundColor: #0c6396;
+$buttonColor: #ff1e42;
+$primaryFont: "Ubuntu Mono", monospace;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: $primaryFont;
+}
+body {
+  background-color: $backgroundColor;
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+}
+
+header {
+  color: white;
+  text-align: center;
+  font-size: x-large;
+  margin-top: 2rem;
+}
+
+form {
+  position: relative;
+  // display: flex;
+  // align-items: center;
+  margin-top: 3rem;
+  input {
+    // -webkit-appearance: none;
+    width: 50%;
+    border: none;
+    background: none;
+    outline: none;
+    color: inherit;
+    border-bottom: 1px solid;
+    font-size: 2rem;
+    height: 40px;
+    padding: 5px 5px 10px;
+    &::placeholder {
+      color: currentColor;
+    }
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    background-color: $buttonColor;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    padding: 15px 20px;
+    margin-left: 15px;
+    border-radius: 5px;
+    color: white;
+    transition: 0.3s ease-in-out;
+    &:hover {
+      background-color: #c3112d;
+    }
+  }
+  .msg {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    max-width: 450px;
+    min-height: 40px;
+  }
+}
