@@ -1,1 +1,1 @@
-## Vanilla JavaScripy - Sass - Toastify
+## Vanilla JavaScript - Sass - Toastify
