@@ -7,10 +7,18 @@
 }
 
 nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   .icon {
     width: 30px;
     cursor: pointer;
     margin-left: 2rem;
+    margin-top: 2rem;
+  }
+  .icon-loc {
+    width: 30px;
+    cursor: pointer;
     margin-top: 2rem;
   }
 }

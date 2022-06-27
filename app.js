@@ -132,6 +132,7 @@ function generateToast({
 //! dark-light mode
 
 const modeIcon = document.querySelector(".icon");
+const locIcon = document.querySelector(".icon-loc");
 
 localStorage.getItem("theme") == null
   ? localStorage.setItem("theme", "light")
@@ -141,9 +142,11 @@ let localData = localStorage.getItem("theme");
 
 if (localData == "light") {
   modeIcon.src = "./img/moon.png";
+  locIcon.src = "./img/lightloc.png";
   document.body.classList.remove("dark-theme");
 } else if (localData == "dark") {
   modeIcon.src = "./img/sun.png";
+  locIcon.src = "./img/darkloc.png";
   document.body.classList.add("dark-theme");
 }
 
@@ -151,9 +154,103 @@ modeIcon.addEventListener("click", () => {
   document.body.classList.toggle("dark-theme");
   if (document.body.classList.contains("dark-theme")) {
     modeIcon.src = "./img/sun.png";
+    locIcon.src = "./img/darkloc.png";
     localStorage.setItem("theme", "dark");
   } else {
     modeIcon.src = "./img/moon.png";
+    locIcon.src = "./img/lightloc.png";
     localStorage.setItem("theme", "light");
   }
+});
+
+//! location
+
+// latlong.addEventListener("click", () => {
+//   navigator.geolocation.getCurrentPosition(function (position) {
+//     let lat = position.coords.latitude;
+//     let long = position.coords.longitude;
+//     const url2 = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}`;
+//     const res = await fetch(url2).then(resp=>resp.json)
+//     console.log(res);
+//   });
+// });
+
+// const showPosition = (position) => {
+//   console.log(position.coords.latitude);
+// };
+
+// const errorPosition = (error) => {
+//   console.error(error);
+// };
+
+// latlong.addEventListener("click", () => {
+//   locWeather();
+// });
+
+// const locWeather = async () => {
+//   navigator.geolocation.getCurrentPosition(showPosition, errorPosition);
+//   let lat = position.coords.latitude;
+//   let long = position.coords.longitude;
+//   const url = `https://api.openweathermap.org/data/2.5/weather?&appid=${apiKey}`;
+//   const response = await fetch(url).then((response) => response.json()); //! herhangi bir yöntem yazmazsak get anlamına gelir.
+//   const { name, main, sys, weather } = response;
+// };
+
+// const options = {
+//   enableHighAccuracy: true,
+//   timeout: 5000,
+//   maximumAge: 0,
+// };
+
+// function success(pos) {
+//   const crd = pos.coords;
+//   let lat = crd.latitude;
+//   let long = crd.longitude;
+//   // console.log("Your current position is:");
+//   // console.log(`Latitude : ${crd.latitude}`);
+//   // console.log(`Longitude: ${crd.longitude}`);
+//   // console.log(`More or less ${crd.accuracy} meters.`);
+// }
+
+// function error(err) {
+//   console.warn(`ERROR(${err.code}): ${err.message}`);
+// }
+
+//
+
+const latLong = document.querySelector(".icon-loc");
+
+const successPosition = (position) => {
+  let tokenKey = DecryptStringAES(localStorage.getItem("apiKey"));
+  const { latitude, longitude } = position.coords;
+  const res = fetch(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${tokenKey}`
+  )
+    .then((response) => response.json())
+    .then(console.log);
+
+  const { name, main, sys, weather } = res;
+  const createdLi = document.createElement("li");
+  createdLi.classList.add("city");
+  const createdLiInnerHtml = `
+        <h2 class="city-name" data-name="${name}, ${sys.country}">
+            <span>${name}</span>
+            <sup>${sys.country}</sup>
+        </h2>
+        <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
+        <figure>
+            <img class="city-icon" src="${iconUrl}">
+            <figcaption>${weather[0].description}</figcaption>
+        </figure>`;
+  createdLi.innerHTML = createdLiInnerHtml;
+  //append vs. prepend
+  list.prepend(createdLi); //! append sona prepend başa ekler
+};
+
+const denyPosition = (err) => {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+};
+
+latLong.addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(successPosition, console.log);
 });
