@@ -4,7 +4,7 @@ const input = document.querySelector(".top-banner input");
 const msg = document.querySelector("span.msg");
 const list = document.querySelector(".ajax-section .cities");
 
-userTokenKey = "7b9dab7aa7664a84c99a8f60a307baf8";
+userTokenKey = ""; //! Your api key
 localStorage.setItem("apiKey", EncryptStringAES(userTokenKey)); //! apiKey adı ile localStorage e kaydettik
 
 form.addEventListener("submit", (e) => {
@@ -16,7 +16,7 @@ const getWeatherData = async () => {
   let tokenKey = DecryptStringAES(localStorage.getItem("apiKey"));
   //! Şifreleyip localStorage kısmına attığımız apiKeyi tekrar şifresini çözerek çağırıyoruz.
   let inputVal = input.value; //! const input = document.querySelector(".top-banner input") olan;
-  let lang = "tr";
+  let lang = "en";
   let unitType = "metric";
   let url = `https://api.openweathermap.org/data/2.5/weather?q=${inputVal}&appid=${tokenKey}&units=${unitType}&lang=${lang}`;
   try {
@@ -48,7 +48,7 @@ const getWeatherData = async () => {
         // }, 5000);
         generateToast({
           message: `You already know the weather for ${name}`,
-          background: "#ff1e42",
+          background: "linear-gradient(to right , #cc2b5e, #753a88)",
           color: "hsl(13, 100%, 171%)",
           length: "3000ms",
         });
@@ -56,6 +56,7 @@ const getWeatherData = async () => {
         return;
       }
     }
+
     const createdLi = document.createElement("li");
     createdLi.classList.add("city");
     const createdLiInnerHtml = `
@@ -77,7 +78,7 @@ const getWeatherData = async () => {
     // msg.innerText = "City can not find";
     generateToast({
       message: `City can not found`,
-      background: "#ff1e42",
+      background: "linear-gradient(to right , #cc2b5e, #753a88)",
       color: "hsl(13, 100%, 171%)",
       length: "3000ms",
     });
@@ -101,7 +102,7 @@ function generateToast({
 }) {
   toastContainer.insertAdjacentHTML(
     "beforeend",
-    `<p class='toast' style='background-color:${background}; {localStorage.getItem('theme') == 'light' ? (color : black) : (color : white) }; animation-duration:${length}'>${message}</p>`
+    `<p class='toast' style='background:${background}; {localStorage.getItem('theme') == 'light' ? (color : black) : (color : white) }; animation-duration:${length}'>${message}</p>`
   );
   const toast = toastContainer.lastElementChild;
   toast.addEventListener("animationend", () => toast.remove());
@@ -165,92 +166,56 @@ modeIcon.addEventListener("click", () => {
 
 //! location
 
-// latlong.addEventListener("click", () => {
-//   navigator.geolocation.getCurrentPosition(function (position) {
-//     let lat = position.coords.latitude;
-//     let long = position.coords.longitude;
-//     const url2 = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}`;
-//     const res = await fetch(url2).then(resp=>resp.json)
-//     console.log(res);
-//   });
-// });
-
-// const showPosition = (position) => {
-//   console.log(position.coords.latitude);
-// };
-
-// const errorPosition = (error) => {
-//   console.error(error);
-// };
-
-// latlong.addEventListener("click", () => {
-//   locWeather();
-// });
-
-// const locWeather = async () => {
-//   navigator.geolocation.getCurrentPosition(showPosition, errorPosition);
-//   let lat = position.coords.latitude;
-//   let long = position.coords.longitude;
-//   const url = `https://api.openweathermap.org/data/2.5/weather?&appid=${apiKey}`;
-//   const response = await fetch(url).then((response) => response.json()); //! herhangi bir yöntem yazmazsak get anlamına gelir.
-//   const { name, main, sys, weather } = response;
-// };
-
-// const options = {
-//   enableHighAccuracy: true,
-//   timeout: 5000,
-//   maximumAge: 0,
-// };
-
-// function success(pos) {
-//   const crd = pos.coords;
-//   let lat = crd.latitude;
-//   let long = crd.longitude;
-//   // console.log("Your current position is:");
-//   // console.log(`Latitude : ${crd.latitude}`);
-//   // console.log(`Longitude: ${crd.longitude}`);
-//   // console.log(`More or less ${crd.accuracy} meters.`);
-// }
-
-// function error(err) {
-//   console.warn(`ERROR(${err.code}): ${err.message}`);
-// }
-
-//
-
 const latLong = document.querySelector(".icon-loc");
-
-const successPosition = (position) => {
-  let tokenKey = DecryptStringAES(localStorage.getItem("apiKey"));
-  const { latitude, longitude } = position.coords;
-  const res = fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${tokenKey}`
-  )
-    .then((response) => response.json())
-    .then(console.log);
-
-  const { name, main, sys, weather } = res;
-  const createdLi = document.createElement("li");
-  createdLi.classList.add("city");
-  const createdLiInnerHtml = `
-        <h2 class="city-name" data-name="${name}, ${sys.country}">
-            <span>${name}</span>
-            <sup>${sys.country}</sup>
-        </h2>
-        <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
-        <figure>
-            <img class="city-icon" src="${iconUrl}">
-            <figcaption>${weather[0].description}</figcaption>
-        </figure>`;
-  createdLi.innerHTML = createdLiInnerHtml;
-  //append vs. prepend
-  list.prepend(createdLi); //! append sona prepend başa ekler
-};
-
-const denyPosition = (err) => {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
-};
-
 latLong.addEventListener("click", () => {
-  navigator.geolocation.getCurrentPosition(successPosition, console.log);
+  navigator.geolocation.getCurrentPosition(getPosition);
 });
+
+const getPosition = (position) => {
+  let long = position.coords.longitude;
+  let lat = position.coords.latitude;
+  let tokenKey = DecryptStringAES(localStorage.getItem("apiKey"));
+  let unitType = "metric";
+  let lang = "en";
+  const urlLocation = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=${unitType}&lang=${lang}&appid=${tokenKey}`;
+
+  fetch(urlLocation)
+    .then((res) => res.json())
+    .then((data) => {
+      // console.log(data);
+      const { name, main, sys, weather } = data;
+      let iconUrl = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
+      const cityListItems = list.querySelectorAll(".city");
+      const cityListItemsArray = Array.from(cityListItems);
+      if (cityListItemsArray.length > 0) {
+        const filteredArray = cityListItemsArray.filter(
+          (cityCard) =>
+            cityCard.querySelector(".city-name span").innerText == name
+        );
+        if (filteredArray.length > 0) {
+          generateToast({
+            message: `You already know the weather for ${name}`,
+            background: "linear-gradient(to right , #cc2b5e, #753a88)",
+            color: "hsl(13, 100%, 171%)",
+            length: "3000ms",
+          });
+          form.reset();
+          return;
+        }
+      }
+      const createdLi = document.createElement("li");
+      createdLi.classList.add("city");
+      const createdLiInnerHtml = `
+               <h2 class="city-name" data-name="${name}, ${sys.country}">
+                   <span>${name}</span>
+                   <sup>${sys.country}</sup>
+               </h2>
+              <div class="city-temp">${Math.round(main.temp)}<sup>°C</sup></div>
+               <figure>
+                   <img class="city-icon" src="${iconUrl}">
+                   <figcaption>${weather[0].description}</figcaption>
+               </figure>`;
+      createdLi.innerHTML = createdLiInnerHtml;
+      list.prepend(createdLi);
+    });
+};

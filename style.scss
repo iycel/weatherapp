@@ -6,13 +6,21 @@
 @import "darkMode";
 
 body {
-  background-color: $backgroundColor;
+  background: $backgroundColor;
   color: $fontColor;
+  height: 100vh;
   .container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
+  }
+  .page-footer {
+    bottom: 0;
+    right: 0;
+    position: fixed;
+    margin-bottom: 2rem;
+    margin-right: 2rem;
   }
 }
 
@@ -54,7 +62,8 @@ form {
     padding: 15px 20px;
     margin-left: 15px;
     border-radius: 5px;
-    color: white;
+    color: rgba(0, 0, 0, 0.781);
+    // color: $fontColor;
     transition: 0.3s ease-in-out;
     &:hover {
       background-color: #c3112d;
